@@ -2,7 +2,8 @@ html, body, section {
     width: 100%;
     height: 100%;
     margin: 0;
-    background-color: rgb(3, 191, 191);
+    background-color: rgb(37, 37, 37);
+    color: rgb(155, 155, 155);
 }
 
 h1, h2, h3, h4, h5, p {
@@ -34,4 +35,65 @@ h1.header_sitetitle {
 
 #header_date {
     margin-left: 15px;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+}
+
+div.main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    margin: 10px auto 0px;
+    width: calc(100% - 10px);
+}
+
+div.footer {
+    text-align: center;
+    margin: 10px 0;
+}
+
+div.main_sidebar {
+    flex-basis: 250px;
+    border-right: 3px solid rgb(155, 155, 155);
+    padding-top: 20px;
+}
+
+div.main_content {
+    margin: 0px 8px;
+    flex-grow: 1;
+    max-width: calc(100% - 260px);
+}
+
+
+a img {
+    margin: 5px;
+}
+
+ul.header_navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-top: 3px solid rgb(155, 155, 155);
+    border-bottom: 3px solid rgb(155, 155, 155);
+    width: 800px;
+    padding: 4px;
+    display: block;
+    margin: 10px auto 0px;
+}
+
+li.header_navbar_item {
+    display: inline;
+    margin: 2px 10px;
+}
+
+li.header_navbar_item a {
+    color: rgb(155, 155, 155);
+    font-weight: bold;
+}
+
+div.main_content p, div.main_content h2 {
+    margin: 10px 0px;
 }
