@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const { Server } = require('socket.io');
 const fs = require('fs');
 
+const { initDB } = require('./controller/db')
+
 const app = express();
 const redirectApp = express();
 
@@ -12,22 +14,21 @@ const httpPort = 5000;
 const httpsPort = 5443;
 
 var options = {
-        key: fs.readFileSync('ssl/charliesbrainpipe.com_key.txt'),
-        cert: fs.readFileSync('ssl/charliesbrainpipe.com.crt'),
-        ca:fs.readFileSync('ssl/charliesbrainpipe.com.ca-bundle')
+    key: fs.readFileSync('ssl/charliesbrainpipe.com_key.txt'),
+    cert: fs.readFileSync('ssl/charliesbrainpipe.com.crt'),
+    ca:fs.readFileSync('ssl/charliesbrainpipe.com.ca-bundle')
 };
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-const httpServer = http.createServer(redirectApp);
+const httpServer = http.createServer(app);
 const httpsServer = https.createServer(options, app);
 
 redirectApp.get("/{*any}", (req, res, next) => {
-        res.redirect("https://" + req.headers.host + req.path);
+    res.redirect("https://" + req.headers.host + req.path);
 });
-
 
 function getDateTimeInMinutes() {
     var datetime = new Date();
@@ -50,7 +51,7 @@ app.post('/post/time', urlencodedParser, (req, res) => {
 
 let datetime;
 
-const io = new Server(httpsServer);
+const io = new Server(httpServer);
 
 io.on('connection', (socket) => {
     socket.emit('time changed', datetime);
@@ -83,6 +84,8 @@ function updateDateTime() {
 }
 
 updateDateTime();
+
+initDB();
 
 httpServer.listen(httpPort, () => {
   console.log(`HTTP server listening to redirect traffic on port ${httpPort}`);
