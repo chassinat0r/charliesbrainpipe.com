@@ -27,12 +27,12 @@
                         <img src="assets/powered by node.png" style="height: 60px;">
                     </a>
                     <h3>Sign In (Admins Only)</h3>
-                    <form class="main_sidebar_form">
+                    <form class="main_sidebar_form" id="signin-form" action="/api/signin", method="POST">
                         <label for="username" class="main_sidebar_label">Username</label>
-                        <input type="text" class="main_sidebar_input_text" name="username" id="username">
+                        <input type="text" class="main_sidebar_input_text" name="username" id="username" required>
                         <label for="password" class="main_sidebar_label">Password</label>
-                        <input type="password" class="main_sidebar_input_text" name="password" id="password">
-                        <input type="submit" class="main_sidebar_submit" value="Sign In">
+                        <input type="password" class="main_sidebar_input_text" name="password" id="password" required>
+                        <input type="submit" class="main_sidebar_submit" id="signin-btn" value="Sign In">
                     </form>
                 </div>
                 <div class="main_content">

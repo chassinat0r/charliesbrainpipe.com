@@ -6,6 +6,7 @@ const { Server } = require('socket.io');
 const fs = require('fs');
 
 const { initDB } = require('./controller/db')
+const { signIn } = require('./controller/auth')
 
 const app = express();
 const redirectApp = express();
@@ -36,18 +37,7 @@ function getDateTimeInMinutes() {
     return parseInt(datetime.getTime() / 60000);  
 }
 
-app.post('/post/time', urlencodedParser, (req, res) => {
-    let datetime = getDateTimeInMinutes();
-    let timeDiff = req.body.dt - datetime;
-    let hourDiff = parseInt(timeDiff / 60);
-    let minuteDiff = parseInt(timeDiff - hourDiff*60);
-    res.send({
-        datetime: datetime,
-        hourDiff: hourDiff,
-        minuteDiff: minuteDiff
-    });
-    res.end();
-});
+app.post('/api/signin', urlencodedParser, signIn);
 
 let datetime;
 

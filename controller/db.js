@@ -3,22 +3,13 @@ const { open } = require('sqlite');
 const bcrypt = require('bcrypt');
 const readline = require('node:readline');
 
+const saltRounds = 10;
+
 async function openDB(filename) {
     return open({
         filename: filename,
         driver: sqlite3.Database
     });
-}
-
-async function hash(plaintext) {
-    const hashedPassword = await new Promise((resolve, reject) => {
-        bcrypt.hash(plaintext, 10, (err, hash) => {
-            if (err) reject(err);
-            resolve(hash);
-        });
-    });
-
-    return hashedPassword;
 }
 
 async function initDB() {
@@ -47,7 +38,7 @@ async function initDB() {
 
         rl.close();
 
-        const hashedPassword = await hash(password);
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         await db.run(`
             INSERT INTO Accounts (Username, Password)
@@ -58,4 +49,4 @@ async function initDB() {
     await db.close();
 }
 
-module.exports = { openDB, hash, initDB };
+module.exports = { openDB, initDB };
