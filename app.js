@@ -2,11 +2,12 @@ const express = require('express');
 const http = require('http');
 const https = require('https');
 const bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const fs = require('fs');
 
 const { initDB } = require('./controller/db')
-const { signIn } = require('./controller/auth')
+const { signIn, checkSignIn } = require('./controller/auth')
 
 const app = express();
 const redirectApp = express();
@@ -22,6 +23,8 @@ var options = {
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(cookieParser());
+
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const httpServer = http.createServer(app);
@@ -38,6 +41,8 @@ function getDateTimeInMinutes() {
 }
 
 app.post('/api/signin', urlencodedParser, signIn);
+
+app.post('/api/check_signin', urlencodedParser, checkSignIn);
 
 let datetime;
 
