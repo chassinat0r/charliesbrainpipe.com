@@ -1,7 +1,5 @@
 function getDateTimeInMinutes() {
     var datetime = new Date();
-    // datetime.setHours(datetime.getHours() + 2);
-    // datetime.setMinutes(datetime.getMinutes() - 30);
 
     return parseInt(datetime.getTime() / 60000);  
 }
@@ -33,13 +31,6 @@ socket.on('time changed', (datetime) => {
     $("#header_time").html(myTimeStr);
 });
 
-
-
-// let dt = getDateTimeInMinutes();
-
-// const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-// const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
 function getMyDatetime(data) {
     var myDateTime = new Date(data.datetime*60*1000);
     let myWeekday = weekdays[myDateTime.getDay()];
@@ -56,3 +47,10 @@ function getMyDatetime(data) {
     let timeDiffStr = `You are ${Math.abs(data.hourDiff)} hour${Math.abs(data.hourDiff)!=1 ? "s" : ""} and ${Math.abs(data.minuteDiff)} minute${Math.abs(data.minuteDiff)!=1 ? "s" : ""} ${data.minuteDiff < 0 || data.hourDiff < 0 ? "behind" : "ahead of"} me`;
     $("#header_timediff").html(timeDiffStr);
 }
+
+$.post('/api/check_signin', (data) => {
+    if (data["signed_in"]) {
+        $("#signin-form").remove();
+        $(".main_sidebar").append(`<p>Signed in as <strong>${data["username"]}</strong></p>`);
+    }
+});
