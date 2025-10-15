@@ -24,6 +24,14 @@ async function initDB() {
         );
     `);
 
+    await db.run(`
+        CREATE TABLE IF NOT EXISTS "Sessions" (
+            "Session"	TEXT UNIQUE,
+            "UserID"	TEXT,
+            PRIMARY KEY("Session")
+        );
+    `);
+
     var row = await db.get("SELECT ID FROM Accounts");
 
     if (row === undefined) {
