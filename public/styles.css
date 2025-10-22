@@ -102,8 +102,12 @@ form.main_sidebar_form {
     width: calc(100% - 20px);
 }
 
-label.main_sidebar_label {
+label.main_sidebar_label, label.main_content_editor_label {
     font-weight: bold;
+}
+
+label.main_content_editor_label {
+    display: block;
 }
 
 input {
@@ -151,4 +155,62 @@ input[type="submit"].main_sidebar_submit:active {
     border-left: 2px solid rgb(104, 104, 104);
     border-bottom: 3px solid rgb(191, 191, 191);
     border-right: 3px solid rgb(191, 191, 191);
+}
+
+div.main_content_adminbtns button {
+    height: 35px;
+    border: 2px solid rgb(108, 108, 108);
+    font-weight: bold;
+    background: rgb(177, 177, 177);
+    color: rgb(0, 0, 0);
+}
+
+button.main_content_editor_btn {
+    height: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 2px solid rgb(1, 77, 94);
+    border-radius: 5px;
+    font-weight: bold;
+    background: rgb(1, 118, 144);
+    color: rgb(235, 235, 235);
+}
+
+div.main_content_editor {
+    margin-top: 5px;
+}
+
+div.main_content_editor_buttons {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+div.main_content_editor_buttons button {
+    border: 2px solid rgb(104, 104, 104);
+    background: rgb(133, 133, 133);
+    color:rgb(16, 16, 16);
+    padding: 5px;
+    margin-right: 5px;
+}
+
+div.main_content_editor br {
+    margin: 4px;
+}
+
+button.main_content_editor_btn {
+    display: block;
+}
+
+textarea.main_content_editor_textarea, input[type="text"].main_content_editor_input {
+    width: 100%;
+    max-width: 500px;
+}
+
+textarea.main_content_editor_textarea {
+    height: 150px;
+}
+
+input[type="text"].main_content_editor_input {
+    height: 30px;
+    margin-bottom: 5px;
 }

@@ -32,6 +32,28 @@ async function initDB() {
         );
     `);
 
+    await db.run(`
+        CREATE TABLE IF NOT EXISTS "Posts" (
+            "ID"    	INTEGER NOT NULL UNIQUE,
+            "AuthorID"  INTEGER NOT NULL,
+            "Date"      INTEGER NOT NULL,
+            "Title"     TEXT NOT NULL,
+            "Body"      TEXT,
+            PRIMARY KEY("ID" AUTOINCREMENT)
+        );
+    `);
+
+    await db.run(`
+        CREATE TABLE IF NOT EXISTS "Pages" (
+            "URL"       TEXT NOT NULL UNIQUE,
+            "AuthorID"  INTEGER NOT NULL,
+            "Date"      INTEGER NOT NULL,
+            "Title"     TEXT NOT NULL,
+            "Body"      TEXT,
+            PRIMARY KEY("URL")
+        );
+    `);
+
     var row = await db.get("SELECT ID FROM Accounts");
 
     if (row === undefined) {

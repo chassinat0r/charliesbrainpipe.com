@@ -6,8 +6,9 @@ var cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const fs = require('fs');
 
-const { initDB } = require('./controller/db')
-const { signIn, checkSignIn } = require('./controller/auth')
+const { initDB } = require('./controller/db');
+const { signIn, checkSignIn } = require('./controller/auth');
+const { submitPost } = require('./controller/blog');
 
 const app = express();
 const redirectApp = express();
@@ -40,9 +41,15 @@ function getDateTimeInMinutes() {
     return parseInt(datetime.getTime() / 60000);  
 }
 
+app.get('/blog', (req, res) => {
+    res.sendFile("public/blog.html", {root: __dirname });
+});
+
 app.post('/api/signin', urlencodedParser, signIn);
 
 app.post('/api/check_signin', urlencodedParser, checkSignIn);
+
+app.post('/api/submit_post', urlencodedParser, submitPost);
 
 let datetime;
 

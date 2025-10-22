@@ -41,6 +41,25 @@ async function signIn(req, res) {
     return true;
 }
 
+async function getUserFromSession(session) {
+    if (session === undefined) { 
+        return -1; 
+    }
+
+    const db = await openDB("mywebsite.db");
+
+    const row = await db.get("SELECT UserID FROM Sessions WHERE Session = ?", session);
+
+    if (row === undefined) { 
+        await db.close();
+        return -1; 
+    }
+
+    await db.close();
+
+    return row["UserID"];
+}
+
 async function checkSignIn(req, res) {
     const sessionID = req.cookies["session"];
 
@@ -84,7 +103,9 @@ async function checkSignIn(req, res) {
 
     res.end();
 
+    await db.close();
+
     return true;
 }
 
-module.exports = { signIn, checkSignIn };
+module.exports = { signIn, getUserFromSession, checkSignIn };

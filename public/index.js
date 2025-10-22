@@ -52,5 +52,29 @@ $.post('/api/check_signin', (data) => {
     if (data["signed_in"]) {
         $("#signin-form").remove();
         $(".main_sidebar").append(`<p>Signed in as <strong>${data["username"]}</strong></p>`);
+    } else {
+        $(".main_content_adminbtns").remove();
     }
+});
+
+$("#newpost-btn").click(() => {
+    if (window.location.pathname === "/blog") {
+        $(".main_content_editor").toggle();
+    }
+})
+
+$("#submit-post-btn").click(() => {
+    $.post('/api/submit_post', {
+        title: $("#post_title").val(),
+        body: $("#post_body").val()
+    }, (data) => {
+        if (data["code"] != 200) {
+            alert(data["msg"]);
+        } else {
+            alert("Published!");
+            $("#post_title").val("");
+            $("#post_body").val("");
+            window.location.reload();
+        }
+    });
 });
