@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const { initDB } = require('./controller/db');
 const { signIn, checkSignIn } = require('./controller/auth');
-const { submitPost } = require('./controller/blog');
+const { submitPost, showBlogPost } = require('./controller/blog');
 
 const app = express();
 const redirectApp = express();
@@ -44,6 +44,8 @@ function getDateTimeInMinutes() {
 app.get('/blog', (req, res) => {
     res.sendFile("public/blog.html", {root: __dirname });
 });
+
+app.get('/blog/:id', showBlogPost);
 
 app.post('/api/signin', urlencodedParser, signIn);
 

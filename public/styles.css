@@ -214,3 +214,7 @@ input[type="text"].main_content_editor_input {
     height: 30px;
     margin-bottom: 5px;
 }
+
+h1.page_title {
+    font-size: 50px;
+}

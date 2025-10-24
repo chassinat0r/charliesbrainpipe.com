@@ -3,7 +3,7 @@
     <head lang="en">
         <meta charset="utf-8">
         <title>Charlie's Brainpipe -- Blog</title>
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="/styles.css">
     </head>
     <body>
         <section>
@@ -21,10 +21,10 @@
             <div class="main">
                 <div class="main_sidebar">
                     <a href="https://petition.parliament.uk/petitions/722903">
-                        <img src="assets/osa.png" style="height: 60px;">
+                        <img src="/assets/osa.png" style="height: 60px;">
                     </a>
                     <a href="https://nodejs.org">
-                        <img src="assets/powered by node.png" style="height: 60px;">
+                        <img src="/assets/powered by node.png" style="height: 60px;">
                     </a>
                     <form class="main_sidebar_form" id="signin-form" action="/api/signin", method="POST">
                         <h3>Sign In (Admins Only)</h3>
@@ -36,7 +36,7 @@
                     </form>
                 </div>
                 <div class="main_content">
-                    <h2>Blog</h2>
+                    <h1 class="page_title">Blog</h1>
                     <div class="main_content_adminbtns">
                         <button type="button" id="newpost-btn">New Post</button>                        
                     </div>
@@ -71,6 +71,6 @@
         </section>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-        <script src="index.js"></script>
+        <script src="/index.js"></script>
     </body>
 </html>
