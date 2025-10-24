@@ -71,7 +71,6 @@ $("#submit-post-btn").click(() => {
         if (data["code"] != 200) {
             alert(data["msg"]);
         } else {
-            alert("Published!");
             $("#post_title").val("");
             $("#post_body").val("");
             window.location.reload();

@@ -218,3 +218,18 @@ input[type="text"].main_content_editor_input {
 h1.page_title {
     font-size: 50px;
 }
+
+div.main_content_listing {
+    border-bottom: 2px solid lightgrey;
+    padding-top: 5px;
+    display: block;
+}
+
+h1.main_content_listing_title {
+    font-size: 30px;
+}
+
+h1.main_content_listing_title a {
+    color: rgb(197, 197, 197);
+    text-decoration: none;
+}
