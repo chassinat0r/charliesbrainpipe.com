@@ -1,5 +1,5 @@
 const { getUserFromSession } = require('./auth')
-const { openDB } = require('./db')
+const { DBHandler } = require('./DBHandler')
 const marked = require('marked');
 
 const dateToStr = (date) => {
@@ -25,8 +25,8 @@ const dateToStr = (date) => {
     return dateFormat;
 }
 
-async function userIDGetUsername(db, userID) {
-    const row = await db.get("SELECT Username FROM Accounts WHERE ID = ?", userID);
+async function userIDGetUsername(userID) {
+    const row = await DBHandler.getDO().get("SELECT Username FROM Accounts WHERE ID = ?", userID);
 
     const username = (row === undefined) ? "[deleted]" : row["Username"];
 
@@ -36,9 +36,7 @@ async function userIDGetUsername(db, userID) {
 async function displayPosts(req, res) {
     const page = (req.query["page"] === undefined || req.query["page"] < 1) ? 1 : req.query["page"];
     
-    const db = await openDB("mywebsite.db");
-
-    const rows = await db.all(`
+    const rows = await DBHandler.getDO().all(`
         SELECT * FROM Posts ORDER BY Date DESC LIMIT ${(page-1)*5}, ${page*5}    
     `);
 
@@ -47,15 +45,13 @@ async function displayPosts(req, res) {
         <html>
             <head lang="en">
                 <meta charset="utf-8">
-                <title>Charlie's Brainpipe -- Blog</title>
-                <link rel="stylesheet" href="/styles.css">
+                <title>Charlie's Brainpipe - Blog</title>
+                <link rel="stylesheet" href="/assets/css/styles.css">
             </head>
             <body>
                 <section>
                     <div class="header">
                         <h1 class="header_sitetitle">Charlie's Brainpipe</h1>
-                        <div class="header_datetime"><span id="header_time">Time Here</span>      <span id="header_date">Date Here</span></div>
-                        <div id="header_timediff">Time Difference Here</div>
                         <ul class="header_navbar">
                             <li class="header_navbar_item"><a href="/">Home</a></li>
                             <li class="header_navbar_item"><a href="/blog">Blog</a></li>
@@ -136,7 +132,7 @@ async function displayPosts(req, res) {
                 </section>
                 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
                 <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-                <script src="/index.js"></script>
+                <script src="/assets/js/index.js"></script>
             </body>
         </html>    
     `;
@@ -158,11 +154,7 @@ async function submitPost(req, res) {
 
     const { title, body } = req.body;
 
-    const db = await openDB("mywebsite.db");
-
-    await db.run("INSERT INTO Posts (AuthorID, Date, Title, Body) VALUES (?, ?, ?, ?)", userID, (new Date()).getTime(), title, body);
-
-    await db.close();
+    await DBHandler.getDO().run("INSERT INTO Posts (AuthorID, Date, Title, Body) VALUES (?, ?, ?, ?)", userID, (new Date()).getTime(), title, body);
 
     res.jsonp({
         code: 200
@@ -174,9 +166,7 @@ async function submitPost(req, res) {
 async function showBlogPost(req, res) {
     const postID = req.params.id;
 
-    const db = await openDB("mywebsite.db");
-
-    const row = await db.get("SELECT * FROM Posts WHERE ID = ?", postID)
+    const row = await DBHandler.getDO().get("SELECT * FROM Posts WHERE ID = ?", postID)
 
     if (row === undefined) {
         res.status(404).end("Blog post doesn't exist");
@@ -190,8 +180,7 @@ async function showBlogPost(req, res) {
 
     const dateFormat = dateToStr(date);
 
-    const row2 = await db.get("SELECT Username FROM Accounts WHERE ID = ?", authorID);
-    await db.close();
+    const row2 = await DBHandler.getDO().get("SELECT Username FROM Accounts WHERE ID = ?", authorID);
 
     const username = (row2 === undefined) ? "[deleted]" : row2["Username"];
 

@@ -3,96 +3,55 @@ const http = require('http');
 const https = require('https');
 const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-const { Server } = require('socket.io');
 const fs = require('fs');
 
-const { initDB } = require('./controller/db');
-const { signIn, checkSignIn } = require('./controller/auth');
-const { submitPost, showBlogPost, displayPosts } = require('./controller/blog');
+const DBHandler = require('./controller/DBHandler');
 
+const getRouter = require('./router/get');
+const postRouter = require('./router/post');
+
+DBHandler.initDB("mywebsite.db"); // Open DB and setup tables if not done already
+
+// Create two Express apps, one for the site itself and the other
+// for redirecting HTTP to HTTPS
 const app = express();
 const redirectApp = express();
 
+// Set ports for server to run on
 const httpPort = 5000;
 const httpsPort = 5443;
 
+// Load SSL certificate and key
 var options = {
     key: fs.readFileSync('ssl/charliesbrainpipe.com_key.txt'),
     cert: fs.readFileSync('ssl/charliesbrainpipe.com.crt'),
-    ca:fs.readFileSync('ssl/charliesbrainpipe.com.ca-bundle')
+    ca: fs.readFileSync('ssl/charliesbrainpipe.com.ca-bundle')
 };
 
+// Setup middleware
 app.use(express.static('public'));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+// Set routes
+app.use("/", getRouter);
+app.use("/api", postRouter);
 
-const httpServer = http.createServer(app);
+// Create a server for HTTP and HTTPS
+const httpServer = http.createServer(redirectApp);
 const httpsServer = https.createServer(options, app);
 
+// Redirect all HTTP requests to HTTPS
 redirectApp.get("/{*any}", (req, res, next) => {
     res.redirect("https://" + req.headers.host + req.path);
 });
 
-function getDateTimeInMinutes() {
-    var datetime = new Date();
-
-    return parseInt(datetime.getTime() / 60000);  
-}
-
-app.get('/blog', displayPosts);
-
-app.get('/blog/:id', showBlogPost);
-
-app.post('/api/signin', urlencodedParser, signIn);
-
-app.post('/api/check_signin', urlencodedParser, checkSignIn);
-
-app.post('/api/submit_post', urlencodedParser, submitPost);
-
-let datetime;
-
-const io = new Server(httpServer);
-
-io.on('connection', (socket) => {
-    socket.emit('time changed', datetime);
-
-    socket.on('disconnect', () => {
-        console.log("A user disconnected");
-    });
-
-    socket.on('get time diff', (data) => {
-        let dt = getDateTimeInMinutes();
-        let timeDiff = data - dt;
-        let hourDiff = parseInt(timeDiff / 60);
-        let minuteDiff = parseInt(timeDiff - hourDiff*60);
-
-        socket.emit('return time diff', {
-            hours: hourDiff,
-            minutes: minuteDiff
-        });
-    })
-});
-
-function updateDateTime() {
-    let newDatetime = getDateTimeInMinutes();
-    if (datetime != newDatetime) {        
-        datetime = newDatetime;
-        io.emit('time changed', datetime);
-    }
-    
-    setTimeout(updateDateTime, 1000);
-}
-
-updateDateTime();
-
-initDB();
-
+// Listen HTTP redirect server
 httpServer.listen(httpPort, () => {
   console.log(`HTTP server listening to redirect traffic on port ${httpPort}`);
 });
 
+// Listen HTTPS server
 httpsServer.listen(httpsPort, () => {
     console.log(`HTTPS server listening on port ${httpsPort}`);
 });
